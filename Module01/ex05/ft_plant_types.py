@@ -10,9 +10,9 @@ class Flower(Plant):
 
     def __init__(
             self,
-            name: str, 
-            height: int, 
-            age: int, 
+            name: str,
+            height: int,
+            age: int,
             color: str
             ) -> None:
         super().__init__(name, height, age)
@@ -28,19 +28,29 @@ class Flower(Plant):
         )
         self.bloom()
 
+
 class Tree(Plant):
     def __init__(
-            self, 
-            name: str, 
-            height: int, 
-            age: int, 
+            self,
+            name: str,
+            height: int,
+            age: int,
             trunk_diameter: int
             ) -> None:
         super().__init__(name, height, age)
-        self.trunk_diamter = trunk_diameter
+        self.trunk_diameter = trunk_diameter
 
     def produce_shade(self):
-        print ("Oak provides 78 square meters of shade")
+        shade = self.trunk_diameter * 1.5
+        print(f"{self.name} provides {shade} square meters of shade")
+
+    def get_info(self):
+        print(
+            f"{self.name} (Tree): {self.height}cm, {self.age} days, "
+            f"{self.trunk_diameter}cm diameter"
+        )
+        self.produce_shade()
+
 
 class Vegetable(Plant):
     def __init__(
@@ -50,10 +60,20 @@ class Vegetable(Plant):
             age: int,
             harvest_season: str,
             nutritional_value: str,
-        ) -> None:
+            ) -> None:
         super().__init__(name, height, age)
         self.harvest_season = harvest_season
         self.nutritional_value = nutritional_value
+
+    def nutritional(self):
+        print(f"{self.name} is rich in {self.nutritional_value}")
+
+    def get_info(self):
+        print(
+            f"{self.name} (Vegetable): {self.height}cm, {self.age} days "
+            f"{self.harvest_season} harvest"
+        )
+        self.nutritional()
 
 
 def ft_plant_types() -> None:
@@ -63,5 +83,18 @@ def ft_plant_types() -> None:
     oak = Tree("Oak", 500, 1825, 50)
     spruce = Tree("Spruce", 850, 2000, 60)
 
-    tomato = Vegetable("Tomato", 80, 90, "summer" "vitamin C")
-    corn = Vegetable("Corn", 150, 100, "summer" "vitamin B")
+    tomato = Vegetable("Tomato", 80, 90, "summer", "vitamin C")
+    corn = Vegetable("Corn", 150, 100, "summer", "vitamin B")
+
+    rose.get_info()
+    cactus.get_info()
+    print()
+    oak.get_info()
+    spruce.get_info()
+    print()
+    tomato.get_info()
+    corn.get_info()
+
+
+if __name__ == "__main__":
+    ft_plant_types()
