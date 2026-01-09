@@ -41,7 +41,7 @@ class Tree(Plant):
         self.trunk_diameter = trunk_diameter
 
     def produce_shade(self):
-        shade = self.trunk_diameter * 1.5
+        shade = round(self.trunk_diameter * 1.5)
         print(f"{self.name} provides {shade} square meters of shade")
 
     def get_info(self):
@@ -70,13 +70,15 @@ class Vegetable(Plant):
 
     def get_info(self):
         print(
-            f"{self.name} (Vegetable): {self.height}cm, {self.age} days "
+            f"{self.name} (Vegetable): {self.height}cm, {self.age} days, "
             f"{self.harvest_season} harvest"
         )
         self.nutritional()
 
 
 def ft_plant_types() -> None:
+    print("=== Garden Plant Types ===\n")
+
     rose = Flower("Rose", 25, 30, "red")
     cactus = Flower("Cactus", 120, 90, "green")
 
