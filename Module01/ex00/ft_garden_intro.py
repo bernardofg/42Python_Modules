@@ -1,6 +1,6 @@
 def ft_garden_intro():
     """
-    Docstring for ft_garden_intro
+    Display a simple introduction with basic plant information.
     """
     plant = "Rose"
     height = 25
@@ -15,5 +15,6 @@ def ft_garden_intro():
 
 if __name__ == "__main__":
     """
+    Entry point of the program.
     """
     ft_garden_intro()

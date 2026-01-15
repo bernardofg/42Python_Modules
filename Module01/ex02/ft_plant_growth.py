@@ -25,7 +25,7 @@ class Plant:
 
     def get_info(self) -> None:
         """
-        Print the plant's information in a readable format.
+        Print the plants information in a readable format.
         """
         print(f"{self.name}: {self.height}cm, {self.age} days old")
 

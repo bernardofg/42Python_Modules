@@ -20,7 +20,7 @@ class Plant:
 
 def ft_garden_data() -> None:
     """
-    Create a list of plants and display their information.
+    Create a list of plant's and display their information.
     """
     plants = [
         Plant("Rose", 25, 30),
