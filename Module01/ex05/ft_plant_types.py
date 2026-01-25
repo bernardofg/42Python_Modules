@@ -61,9 +61,9 @@ class Tree(Plant):
 
     def produce_shade(self) -> None:
         """
-        alculate and display shade area.
+        calculate and display shade area.
         """
-        shade = round(self.trunk_diameter * 1.5)
+        shade: int = round(self.trunk_diameter * 1.5)
         print(f"{self.name} provides {shade} square meters of shade")
 
     def get_info(self) -> None:
@@ -137,3 +137,7 @@ def ft_plant_types() -> None:
     print()
     tomato.get_info()
     corn.get_info()
+
+
+if __name__ == "__main__":
+    ft_plant_types()

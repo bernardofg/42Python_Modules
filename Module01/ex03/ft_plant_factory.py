@@ -34,7 +34,7 @@ def ft_plant_factory() -> None:
     """
     Create multiple plants from initial data and display them.
     """
-    plants_info = [
+    plants_info: list[tuple[str, int, int]] = [
         ("Rose", 25, 30),
         ("Oak", 200, 365),
         ("Cactus", 5, 90),

@@ -35,16 +35,16 @@ def ft_plant_growth() -> None:
     Simulate one week of growth for multiple plants and display the result.
     """
     time: int = 7
-    plants = [
+    plants: list[Plant] = [
         Plant("Rose", 25, 30),
         Plant("Cactus", 80, 40)
     ]
-    initial_height = {}
+    initial_height: dict[str, int] = {}
 
     print("=== Day 1 ===")
     for plant in plants:
         plant.get_info()
-        initial_height[plant] = plant.height
+        initial_height[plant.name] = plant.height
 
     for plant in plants:
         day: int = 1
@@ -56,7 +56,7 @@ def ft_plant_growth() -> None:
     print("=== Day 7 ===")
     for plant in plants:
         plant.get_info()
-        growth = plant.height - initial_height[plant]
+        growth = plant.height - initial_height[plant.name]
         print(f"Growth this week: +{growth}cm")
 
 

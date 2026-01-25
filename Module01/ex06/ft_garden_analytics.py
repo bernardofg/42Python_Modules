@@ -4,13 +4,15 @@ class Plant:
     """
     type: str = "Plant"
 
-    def __init__(self, name: str, height: int) -> None:
+    def __init__(self, name: str, height: int, age: int) -> None:
         """
         Initialize plant with name and initial height.
         """
         self.name: str = name
         self.__height: int = 0
+        self.age: int = 0
         self.set_height(height)
+        self.set_age(age)
 
     def set_height(self, new_height: int) -> None:
         """
@@ -22,6 +24,17 @@ class Plant:
             print("Security: Negative height rejected")
             return
         self.__height = new_height
+
+    def set_age(self, new_age: int) -> None:
+        """
+        Set plant age, rejecting negative values.
+        """
+        if new_age < 0:
+            print(f"Invalid operation attempted: age {new_age} "
+                  "days [REJECTED]")
+            print("Security: Negative age rejected")
+            return
+        self.age = new_age
 
     def get_height(self) -> int:
         """
@@ -40,7 +53,7 @@ class Plant:
         """
         Return basic plant information.
         """
-        return f"{self.name}: {self.get_height()}cm"
+        return f"{self.name}: {self.get_height()}cm, {self.age} days"
 
 
 class FloweringPlant(Plant):
@@ -49,11 +62,11 @@ class FloweringPlant(Plant):
     """
     type: str = "FloweringPlant"
 
-    def __init__(self, name: str, height: int, color: str) -> None:
+    def __init__(self, name: str, height: int, age: int, color: str) -> None:
         """
         Initialize flowering plant with color.
         """
-        super().__init__(name, height)
+        super().__init__(name, height, age)
         self.color: str = color
 
     def bloom(self) -> str:
@@ -66,8 +79,10 @@ class FloweringPlant(Plant):
         """
         Return flowering plant information.
         """
-        return f"{self.name}: {self.get_height()}cm, "
-        f"{self.color} flowers {self.bloom()}"
+        return (
+            f"{self.name}: {self.get_height()}cm, {self.age} days, "
+            f"{self.color} flowers {self.bloom()}"
+        )
 
 
 class PrizeFlower(FloweringPlant):
@@ -77,12 +92,12 @@ class PrizeFlower(FloweringPlant):
     type: str = "PrizeFlower"
 
     def __init__(
-            self, name: str, height: int, color: str, points: int
+            self, name: str, height: int, age: int, color: str, points: int
             ) -> None:
         """
         Initialize prize flower with bonus points.
         """
-        super().__init__(name, height, color)
+        super().__init__(name, height, age, color)
         self.points: int = points
 
     def get_info(self) -> str:
@@ -90,7 +105,7 @@ class PrizeFlower(FloweringPlant):
         Return prize flower information including points.
         """
         base: str = super().get_info()
-        return f"{base}, Prize points: {self.points}"
+        return f"{base}, Prize points: {self.points}\n"
 
 
 class Garden:
@@ -209,45 +224,50 @@ class GardenManager:
         """
         Print manager summary and garden scores.
         """
-        print(f"Height validation test: {self.height_validation(10)}")
-        print("Garden scores:")
+        print("Garden scores: - ", end="")
+        first = True
         for garden in self.gardens:
-            print(f"- {garden.owner} -> {self.stats.score(garden)} points")
-        print(f"Total gardens managed: {self.number_of_gardens()}")
+            if not first:
+                print(", ", end="")
+            print(f"{garden.owner}: {self.stats.score(garden)} points", end="")
+            first = False
+        print(f"\nTotal gardens managed: {self.number_of_gardens()}")
 
 
 def ft_garden_analytics() -> None:
     """
     Run the garden management system demo.
     """
-    print("=== Garden Management System Demo ===")
+    print("=== Garden Management System Demo ===\n")
+
     alice_plants: list[Plant] = [
-        Plant("Oak Tree", 100),
-        FloweringPlant("Rose", 25, "red"),
-        PrizeFlower("Sunflower", 50, "yellow", 10),
+        Plant("Oak Tree", 100, 500),
+        FloweringPlant("Rose", 25, 30, "red"),
+        PrizeFlower("Sunflower", 50, 90, "yellow", 10),
     ]
-    alice_garden = Garden("Alice", alice_plants)
 
-    print("")
-    alice_garden.help_all_grow(1)
-
-    print("")
-    alice_garden.get_info()
-
-    print("\n---------------")
     alfredo_plants: list[Plant] = [
-        Plant("Pine", 80),
-        FloweringPlant("Tulips", 15, "blue"),
+        Plant("Pine", 80, 10),
+        FloweringPlant("Tulips", 15, 5, "blue"),
+        PrizeFlower("Orchid", 36, 20, "white", 25),
     ]
+
+    alice_garden = Garden("Alice", alice_plants)
+    print()
     alfredo_garden = Garden("Alfredo", alfredo_plants)
 
-    print("")
-    alfredo_garden.help_all_grow(3)
+    print()
+    alice_garden.help_all_grow(1)
+    print()
+    alfredo_garden.help_all_grow(1)
 
-    print("")
+    print()
+    alice_garden.get_info()
+
+    print()
     alfredo_garden.get_info()
+    print()
 
-    print("\n---------------")
     manager = GardenManager.create_garden_network([alice_garden,
                                                    alfredo_garden])
     manager.get_info()

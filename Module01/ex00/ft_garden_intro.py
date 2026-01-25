@@ -1,13 +1,13 @@
-def ft_garden_intro():
+def ft_garden_intro() -> None:
     """
     Display a simple introduction with basic plant information.
     """
-    plant = "Rose"
-    height = 25
-    age = 30
+    plant: str = "Rose"
+    height: int = 25
+    age: int = 30
 
     print("=== Welcome to My Garden ===")
-    print(f"Plant: {plant}Age{age} days")
+    print(f"Plant: {plant}")
     print(f"Height: {height}cm")
     print(f"Age: {age} days")
     print("\n=== End of Program ===")
