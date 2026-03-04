@@ -18,7 +18,7 @@ def main() -> None:
     print(f"alchemy.transmutation.lead_to_gold(): "
           f"{alchemy.transmutation.lead_to_gold()}")
     print(f"alchemy.transmutation.philosophers_stone(): "
-          f"{alchemy.transmutation.philosophers_stone}")
+          f"{alchemy.transmutation.philosophers_stone()}")
 
     print("\nBoth pathways work! Absolute: clear, Relative: concise")
 
