@@ -1,11 +1,10 @@
-def water_plant(plant_list: list):
-    print("Opening watering system")
+def water_plants(plant_list: list) -> None:
+    print("Opening watering system...")
     try:
         for plant in plant_list:
             if plant is None:
                 raise ValueError("Cannot water None - invalid plant!")
-            else:
-                print(f"Watering {plant}")
+            print(f"Watering {plant}")
     except ValueError as error:
         print("Error:", error)
     else:
@@ -14,20 +13,19 @@ def water_plant(plant_list: list):
         print("Closing watering system (cleanup)\n")
 
 
-def ft_finally_block():
+def ft_finally_block() -> None:
     print("=== Garden Watering System ===\n")
     plant = [
-        "tomatto",
+        "tomato",
         "lettuce",
         "carrots"
     ]
-    water_plant(plant)
+    water_plants(plant)
+
     print("Testing with error...")
-    plant = [
-        "tomato",
-        None
-    ]
-    water_plant(plant)
+    plant = ["tomato", None]
+    water_plants(plant)
+
     print("Cleanup always happens, even with errors!")
 
 

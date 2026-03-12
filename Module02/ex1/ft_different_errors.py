@@ -9,11 +9,11 @@ def garden_operations() -> None:
     try:
         10 / 0
     except ZeroDivisionError as error:
-        print("caught ZeroDivisionError:", error)
+        print("Caught ZeroDivisionError:", error)
 
     print("\nTesting FileNotFoundError...")
     try:
-        raise FileNotFoundError("No such file 'missing.txt'")
+        open("missing.txt")
     except FileNotFoundError as error:
         print("Caught FileNotFoundError:", error)
 
@@ -24,8 +24,14 @@ def garden_operations() -> None:
     except KeyError as error:
         print("Caught KeyError:", error)
 
+    print("\nTesting multiple errors together...")
+    try:
+        int("abc")
+    except (ValueError, ZeroDivisionError):
+        print("Caught an error, but program continues!")
 
-def test_error_types():
+
+def test_error_types() -> None:
     print("=== Garden Error Types Demo ===\n")
     garden_operations()
     print("\nAll error types tested successfully!")

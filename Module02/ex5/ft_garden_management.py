@@ -19,13 +19,13 @@ class HealthCheckError(GardenError):
 
 
 class GardenManager:
-    MAX_TANK = 10
+    MAX_TANK: int = 10
 
-    def __init__(self):
-        self.plants = {}
-        self.water_tank = 5
+    def __init__(self) -> None:
+        self.plants: dict[str, dict[str, int]] = {}
+        self.water_tank: int = 5
 
-    def add_plant(self, name, water, sun):
+    def add_plant(self, name, water, sun) -> None:
         if not name:
             raise PlantError("Plant name cannot be empty!")
 
@@ -38,7 +38,7 @@ class GardenManager:
         }
         print(f"Added {name} successfully")
 
-    def fill_tank(self, amount):
+    def fill_tank(self, amount) -> None:
         if amount <= 0:
             raise TankError("Fill amount must be positive")
 
@@ -48,7 +48,7 @@ class GardenManager:
         self.water_tank += amount
         print(f"Tank filled. Current water level: {self.water_tank}")
 
-    def water_plants(self):
+    def water_plants(self) -> None:
         if self.water_tank <= 0:
             raise WaterError("Not enough water in tank")
 
@@ -64,10 +64,7 @@ class GardenManager:
         finally:
             print("Closing watering system (cleanup)")
 
-    def check_plant_health(self, name):
-        """
-        verify the plants health
-        """
+    def check_plant_health(self, name) -> None:
         if name not in self.plants:
             raise HealthCheckError(f"Plant {name} not found")
 
@@ -88,15 +85,15 @@ class GardenManager:
         print(f"{name}: healthy (water: {water}, sun: {sun})")
 
 
-def main():
+def main() -> None:
     print("=== Garden Management System ===\n")
 
-    manager = GardenManager()
+    manager: GardenManager = GardenManager()
 
     print("Adding plants to garden...")
     try:
-        manager.add_plant("tomato", 5, 8)
-        manager.add_plant("lettuce", 15, 8)
+        manager.add_plant("tomato", 4, 8)
+        manager.add_plant("lettuce", 14, 8)
         manager.add_plant("", 3, 6)
     except PlantError as error:
         print(f"Error adding plant: {error}")
@@ -121,7 +118,7 @@ def main():
     except GardenError as error:
         print(f"Caught GardenError: {error}")
         print("System recovered and continuing...")
-    print("\nGarden management system test complete!", end="")
+    print("\nGarden management system test complete!")
 
 
 if __name__ == "__main__":
