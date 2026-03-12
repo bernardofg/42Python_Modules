@@ -3,7 +3,7 @@ import sys
 
 def main():
     print("=== Inventory System Analysis ===")
-    
+
     args = sys.argv
     inventory: dict[str, int] = dict()
 
