@@ -49,10 +49,24 @@ def main():
 
     print("\n=== Current Inventory ===")
 
-    for key, value in inventory.items():
-        percent = (value / total_items) * 100
-        print(f"{key}: {value} units ({percent:.1f}%)")
+    used = {}
 
+    for _ in inventory:
+        biggest_key = None
+        biggest_value = None
+
+        for key, value in inventory.items():
+            if key in used:
+                continue
+
+            if biggest_value is None or value > biggest_value:
+                biggest_value = value
+                biggest_key = key
+
+        percent = (biggest_value / total_items) * 100
+        print(f"{biggest_key}: {biggest_value} units ({percent:.1f}%)")
+
+        used[biggest_key] = True
     print("\n=== Inventory Statistics ===")
 
     most = None

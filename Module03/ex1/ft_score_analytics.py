@@ -1,7 +1,7 @@
 import sys
 
 
-def main():
+def main() -> None:
     print("=== Player Score Analytics ===")
     argc = len(sys.argv)
     argv = sys.argv
@@ -9,17 +9,17 @@ def main():
         print("No scores provided. Usage: python3 ft_score_analytics.py "
               "<score1> <score2> ...")
         return
-    scores = []
-    for i in range(1, argc):
+    scores: list[int] = []
+    for i in argv[1:]:
         try:
-            value = int(argv[i])
+            value = int(i)
         except ValueError:
             print(f"Invalid score: {argv[i]} its not a valid number.")
             return
         scores += [value]
 
     print(f"Scores processed: {scores}")
-    print("Total players", len(scores))
+    print("Total players:", len(scores))
     print("Total score:", sum(scores))
     print("Average score:", sum(scores) / len(scores))
     print("High score:", max(scores))

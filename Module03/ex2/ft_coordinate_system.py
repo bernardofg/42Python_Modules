@@ -1,12 +1,12 @@
 import math
+import sys
 
 
-def parsing(str_cords: str):
-    parts = str_cords.split(",")
-
+def parsing(str_cords: str) -> tuple[int, int, int] | None:
     try:
+        parts = str_cords.split(",")
         if len(parts) != 3:
-            raise ValueError("Expected 3 coordinates")
+            raise ValueError(f"invalid literal for int() with base 10: '{parts[0]}'")
 
         x = int(parts[0])
         y = int(parts[1])
@@ -22,14 +22,14 @@ def parsing(str_cords: str):
         return
 
 
-def distance_calc(pos1, pos2):
+def distance_calc(pos1: int, pos2: int) -> float:
     x1, y1, z1 = pos1
     x2, y2, z2 = pos2
     result = math.sqrt((x2-x1)**2 + (y2-y1)**2 + (z2-z1)**2)
     return result
 
 
-def main():
+def main() -> None:
     print("=== Game Coordinate System ===")
     pos = (10, 20, 5)
     origin = (0, 0, 0)
