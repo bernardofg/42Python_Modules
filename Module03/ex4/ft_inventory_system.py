@@ -93,8 +93,8 @@ def main():
         if value == least and least_key is None:
             least_key = key
 
-    print(f"Most abundant: {most_key} ({most})")
-    print(f"Least abundant: {least_key} ({least})")
+    print(f"Most abundant: {most_key} ({most} units)")
+    print(f"Least abundant: {least_key} ({least} units)")
 
     print("\n=== Item Categories ===")
 
