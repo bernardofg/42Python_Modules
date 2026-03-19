@@ -32,8 +32,10 @@ class NumericProcessor(DataProcessor):
             for x in data:
                 counter += 1
                 total += x
-
-            avg = total / counter
+            if counter > 0:
+                avg = total / counter
+            else:
+                avg = 0.0
             return (
                 f"Processed {counter} numeric values, sum={total}, avg={avg}"
             )
@@ -59,8 +61,8 @@ class TextProcessor(DataProcessor):
             for char in data:
                 counter += 1
 
-                if char != "" and not in_word:
-                    counter += 1
+                if char != " " and not in_word:
+                    words += 1
                     in_word = True
                 elif char == " ":
                     in_word = False
