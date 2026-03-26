@@ -1,131 +1,65 @@
 import sys
 
 
-def main():
+NEW_ITEM_NAME: str = "magic_item"
+NEW_ITEM_QTY: int = 1
+
+
+def main() -> None:
+    """Parse inventory arguments and print inventory analysis."""
     print("=== Inventory System Analysis ===")
+    inventory: dict[str, int] = {}
+    order: list[str] = []
 
-    args = sys.argv
-    inventory: dict[str, int] = dict()
-
-    for string in args[1:]:
-        key = ""
-        value = ""
-        colon = False
-        for chars in string:
-            if chars == ":":
-                colon = True
-                continue
-
-            if not colon:
-                key += chars
-            else:
-                value += chars
-
-        if not colon:
+    for arg in sys.argv[1:]:
+        if arg.count(":") != 1:
+            print(f"Error - invalid parameter '{arg}'")
             continue
-        if key == "":
+        item_name, quantity_str = arg.split(":")
+        if item_name in inventory:
+            print(f"Redundant item '{item_name}' - discarding")
             continue
-        if value == "":
-            continue
-
         try:
-            qty = int(value)
-        except ValueError:
+            quantity: int = int(quantity_str)
+        except ValueError as error:
+            print(f"Quantity error for '{item_name}': {error}")
             continue
+        inventory.update({item_name: quantity})
+        order.append(item_name)
 
-        if qty < 0:
-            continue
+    print(f"Got inventory: {inventory}")
+    item_list: list[str] = list(inventory.keys())
+    print(f"Item list: {item_list}")
 
-        value = int(value)
-        actual = inventory.get(key, 0)
-        new = actual + value
-        inventory[key] = new
+    total_quantity: int = sum(inventory.values())
+    print(f"Total quantity of the {len(inventory)} items: {total_quantity}")
 
-    total_items = 0
-    for v in inventory.values():
-        total_items += v
-    print(f"Total items in inventory: {total_items}")
-    print(f"Unique item types: {len(inventory)}")
-
-    print("\n=== Current Inventory ===")
-
-    used = {}
-
-    for _ in inventory:
-        biggest_key = None
-        biggest_value = None
-
-        for key, value in inventory.items():
-            if key in used:
-                continue
-
-            if biggest_value is None or value > biggest_value:
-                biggest_value = value
-                biggest_key = key
-
-        percent = (biggest_value / total_items) * 100
-        print(f"{biggest_key}: {biggest_value} units ({percent:.1f}%)")
-
-        used[biggest_key] = True
-    print("\n=== Inventory Statistics ===")
-
-    most = None
-    for value in inventory.values():
-        if most is None:
-            most = value
-        elif value > most:
-            most = value
-
-    most_key = None
-    for key, value in inventory.items():
-        if value == most:
-            most_key = key
-
-    least = None
-    for value in inventory.values():
-        if least is None:
-            least = value
-        elif value < least:
-            least = value
-
-    least_key = None
-    for key, value in inventory.items():
-        if value == least and least_key is None:
-            least_key = key
-
-    print(f"Most abundant: {most_key} ({most} units)")
-    print(f"Least abundant: {least_key} ({least} units)")
-
-    print("\n=== Item Categories ===")
-
-    moderate = {}
-    scarce = {}
-    for key, value in inventory.items():
-        if value >= 4:
-            moderate[key] = value
+    for item_name in order:
+        if total_quantity == 0:
+            percentage: float = 0.0
         else:
-            scarce[key] = value
-    print(f"Moderate: {moderate}")
-    print(f"Scarce: {scarce}")
+            percentage = round(inventory[item_name] * 100 / total_quantity, 1)
+        print(f"Item {item_name} represents {percentage:.1f}%")
 
-    print("\n=== Management Suggestions ===")
+    if inventory:
+        most_abundant: str = order[0]
+        least_abundant: str = order[0]
+        for item_name in order[1:]:
+            if inventory[item_name] > inventory[most_abundant]:
+                most_abundant = item_name
+            if inventory[item_name] < inventory[least_abundant]:
+                least_abundant = item_name
+        print(
+            "Item most abundant: "
+            f"{most_abundant} with quantity {inventory[most_abundant]}"
+        )
+        print(
+            "Item least abundant: "
+            f"{least_abundant} with quantity {inventory[least_abundant]}"
+        )
 
-    restock = []
-    for key, value in inventory.items():
-        if value < 2:
-            restock = restock + [key]
-    print(f"Restock needed: {restock}")
-
-    print("\n === Dictionary Properties Demo ===")
-
-    keys = []
-    values = []
-    for key, value in inventory.items():
-        keys = keys + [key]
-        values = values + [value]
-    print(f"Dictionary keys: {keys}")
-    print(f"Dictionary values: {values}")
-    print(f"Sample lookup - 'sword' in inventory: {'sword' in inventory}")
+    inventory.update({NEW_ITEM_NAME: NEW_ITEM_QTY})
+    print(f"Updated inventory: {inventory}")
 
 
 if __name__ == "__main__":

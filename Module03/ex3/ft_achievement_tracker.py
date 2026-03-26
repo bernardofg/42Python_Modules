@@ -1,8 +1,6 @@
 import random
 
-
-def gen_player_achievements() -> set[str]:
-    achievements: list[str] = [
+ACHIEVEMENTS: list[str] = [
         'Crafting Genius',
         'World Savior',
         'Master Explorer',
@@ -19,51 +17,47 @@ def gen_player_achievements() -> set[str]:
         'Hidden Path Finder'
     ]
 
+PLAYERS: list[str] = ["Alice", "Bob", "Charlie", "Dylan"]
+
+
+def gen_player_achievements() -> set[str]:
     qnty: int = random.randint(3, 8)
-    return set(random.sample(achievements, qnty))
+    return set(random.sample(ACHIEVEMENTS, qnty))
 
 
 def main() -> None:
     print("=== Achievement Tracker System ===\n")
 
-    alice = gen_player_achievements()
-    bob = gen_player_achievements()
-    charlie = gen_player_achievements()
-    dylan = gen_player_achievements()
+    player_sets: dict[str, set[str]] = {}
+    for player in PLAYERS:
+        player_sets[player] = gen_player_achievements()
+        print(f"Player {player}: {player_sets[player]}")
 
-    print(f"Player Alice: {alice}")
-    print(f"Player Bob: {bob}")
-    print(f"Player Charlie: {charlie}")
-    print(f"Player Dylan: {dylan}")
+    distinct: set[str] = set()
+    for achievements in player_sets.values():
+        distinct = distinct.union(achievements)
+    print(f"\nAll distinct achievements: {distinct}")
 
-    print()
+    common: set[str] = player_sets[PLAYERS[0]].copy()
+    for player in PLAYERS[1:]:
+        common = common.intersection(player_sets[player])
+    print(f"\nCommon achievements: {common}\n")
 
-    all_achievements = alice.union(bob).union(charlie).union(dylan)
-    print(f"All distinct achievements: {all_achievements}")
+    for player in PLAYERS:
+        others_unions: set[str] = set()
 
-    print()
+        for other in PLAYERS:
+            if other != player:
+                others_unions = others_unions.union(player_sets[other])
 
-    common = alice.intersection(bob).intersection(charlie).intersection(dylan)
-    print(f"Common achievements: {common}")
-
-    print()
-
-    alice_unique = alice.difference(bob).difference(charlie).difference(dylan)
-    bob_unique = bob.difference(alice).difference(charlie).difference(dylan)
-    charli_unique = charlie.difference(bob).difference(alice).difference(dylan)
-    dylan_unique = dylan.difference(bob).difference(charlie).difference(alice)
-
-    print(f"Only Alice has: {alice_unique}")
-    print(f"Only Bob has: {bob_unique}")
-    print(f"Only Charlie has: {charli_unique}")
-    print(f"Only Dylan has: {dylan_unique}")
+        unique = player_sets[player].difference(others_unions)
+        print(f"Only {player} has: {unique}")
 
     print()
 
-    print(f"Alice is missing: {all_achievements - alice}")
-    print(f"Bob is missing: {all_achievements - bob}")
-    print(f"Charlie is missing: {all_achievements - charlie}")
-    print(f"Dylan is missing: {all_achievements - dylan}")
+    for player in PLAYERS:
+        missing: set[str] = set(ACHIEVEMENTS).difference(player_sets[player])
+        print(f"{player} is missing: {missing}")
 
 
 if __name__ == "__main__":
