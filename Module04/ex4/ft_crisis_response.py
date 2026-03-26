@@ -1,4 +1,4 @@
-def handle_crisis(filename, mode):
+def handle_crisis(filename, mode) -> None:
     if mode:
         print(f"\nROUTINE ACCESS: Attempting access to '{filename}'...")
     else:
@@ -15,12 +15,12 @@ def handle_crisis(filename, mode):
     except PermissionError:
         print("RESPONSE: Security protocols deny access")
         print("STATUS: Crisis handled, security maintained")
-    except Exception:
-        print("RESPONSE: An unexpected error happened")
+    except Exception as e:
+        print(f"RESPONSE: An unexpected error happened: {e}")
         print("STATUS: Crisis handled, security maintained")
 
 
-def main():
+def main() -> None:
     print("=== CYBER ARCHIVES - CRISIS RESPONSE SYSTEM ===")
 
     handle_crisis("lost_archive.txt", False)

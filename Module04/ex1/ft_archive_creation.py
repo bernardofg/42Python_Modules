@@ -1,6 +1,9 @@
+FILENAME = "new_discovery.txt"
+
+
 def main() -> None:
     print("=== CYBER ARCHIVES - PRESERVATION SYSTEM ===\n")
-    print("Initializing new storage unit: new_discovery.txt")
+    print(f"Initializing new storage unit: {FILENAME}")
 
     file = open("new_discovery.txt", "w")
     print("Storage unit created successfully...")
@@ -14,7 +17,7 @@ def main() -> None:
     print(content)
     print("Data inscription complete. Storage unit sealed.")
     file.close()
-    print("Archive 'new_discovery.txt' ready for long-term preservation.")
+    print(f"Archive '{FILENAME}' ready for long-term preservation.")
 
 
 if __name__ == "__main__":
