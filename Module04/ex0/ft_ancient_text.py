@@ -1,11 +1,13 @@
+FILENAME = "ancient_fragment.txt"
+
+
 def main() -> None:
-    file_name = "ancient_fragment.txt"
 
     print("=== CYBER ARCHIVES - DATA RECOVERY SYSTEM ===\n")
-    print(f"Accessing Storage Vault: {file_name}")
+    print(f"Accessing Storage Vault: {FILENAME}")
 
     try:
-        file = open(file_name, "r")
+        file = open(FILENAME, "r")
     except FileNotFoundError:
         print("ERROR: Storage vault not found. Run data generator first.")
         return
