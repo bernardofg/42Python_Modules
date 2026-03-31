@@ -16,6 +16,9 @@ class DataProcessor(ABC):
 
 
 class NumericProcessor(DataProcessor):
+    def __init__(self) -> None:
+        super().__init__()
+
     def validate(self, data: Any) -> bool:
         try:
             for item in data:
@@ -25,25 +28,30 @@ class NumericProcessor(DataProcessor):
             return False
 
     def process(self, data: Any) -> str:
-        if self.validate(data):
-            counter: int = 0
-            total: int = 0
+        try:
+            if not self.validate(data):
+                raise ValueError("Invalid data type for NumericProcessor")
+            values: int = 0
+            sum: int = 0
             avg: float = 0
             for x in data:
-                counter += 1
-                total += x
-            if counter > 0:
-                avg = total / counter
+                values += 1
+                sum += x
+            if values > 0:
+                avg = sum / values
             else:
                 avg = 0.0
             return (
-                f"Processed {counter} numeric values, sum={total}, avg={avg}"
+                f"Processed {values} numeric values, sum={sum}, avg={avg}"
             )
-        else:
-            raise ValueError("Invalid data type for NumericProcessor")
+        except ValueError as e:
+            return f"Error: {e}"
 
 
 class TextProcessor(DataProcessor):
+    def __init__(self) -> None:
+        super().__init__()
+
     def validate(self, data: Any) -> bool:
         try:
             data + ""
@@ -52,7 +60,9 @@ class TextProcessor(DataProcessor):
             return False
 
     def process(self, data: Any) -> str:
-        if self.validate(data):
+        try:
+            if not self.validate(data):
+                raise ValueError("Invalid data type for TextProcessor")
 
             counter: int = 0
             words: int = 0
@@ -70,14 +80,69 @@ class TextProcessor(DataProcessor):
             return (
                 f"Processed text: {counter} characters, {words} words"
             )
-        else:
-            raise ValueError("Invalid data type for TextProcessor")
+        except ValueError as e:
+            return f"Error: {e}"
+
+
+class LogProcessor(DataProcessor):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def validate(self, data: Any) -> bool:
+        try:
+            data + ""
+            if data == "":
+                return False
+            if ":" not in data:
+                return False
+            return True
+        except Exception:
+            return False
+
+    def process(self, data: Any) -> str:
+        try:
+            if not self.validate(data):
+                raise ValueError("Invalid log data")
+
+            level: str = ""
+            message: str = ""
+            sep: bool = False
+            in_message: bool = False
+
+            for char in data:
+                if not sep:
+                    if char == ":":
+                        sep = True
+                    else:
+                        level += char
+                else:
+                    if not in_message:
+                        if char != " ":
+                            message += char
+                            in_message = True
+                    else:
+                        message += char
+
+            if level == "ERROR":
+                return "[ALERT] ERROR level detected: " + message
+
+            if level == "WARNING":
+                return "[WARNING] WARNING level detected: " + message
+
+            return "[INFO] INFO level detected: " + message
+
+        except Exception as error:
+            return f"LogProcessor error: {error}"
 
 
 def main():
     print("=== CODE NEXUS - DATA PROCESSOR FOUNDATION ===")
     print()
     print("Initializing Numeric Processor...")
+
+    print("Initializing Text Processor...")
+
+    print("Initializing Log Processor...")
 
 
 if __name__ == "__main__":
