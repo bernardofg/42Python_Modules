@@ -136,12 +136,12 @@ class DataStream:
 
 
 if __name__ == "__main__":
-    print("=== Code Nexus - Data Stream ===")
+    print("=== Code Nexus - Data Stream ===\n")
     print("Initialize Data Stream...")
     ds = DataStream()
     ds.print_processors_stats()
 
-    print("Registering Numeric Processor")
+    print("\nRegistering Numeric Processor\n")
     num_p = NumericProcessor()
     ds.register_processor(num_p)
 
@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
     ds.print_processors_stats()
 
-    print("Registering other data processors")
+    print("\nRegistering other data processors")
     txt_p = TextProcessor()
     log_p = LogProcessor()
     ds.register_processor(txt_p)
@@ -170,7 +170,7 @@ if __name__ == "__main__":
     ds.process_stream(batch)
     ds.print_processors_stats()
 
-    print("Consume some elements from the data processors: "
+    print("\nConsume some elements from the data processors: "
           "Numeric 3, Text 2, Log 1")
     for _ in range(3):
         num_p.output()
