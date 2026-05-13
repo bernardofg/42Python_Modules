@@ -38,9 +38,12 @@ class NumericProcessor(DataProcessor):
             )
         return False
 
-    def ingest(self, data: int | float | list[int | float]) -> None:
+    def ingest(
+        self, data: int | float | list[int | float]
+    ) -> None:  # type: ignore[override]
         if not self.validate(data):
             raise ValueError("Improper numeric data")
+
         if isinstance(data, list):
             for item in data:
                 self._store(str(item))
@@ -56,9 +59,12 @@ class TextProcessor(DataProcessor):
             return all(isinstance(x, str) for x in data)
         return False
 
-    def ingest(self, data: str | list[str]) -> None:
+    def ingest(
+        self, data: str | list[str]
+    ) -> None:  # type: ignore[override]
         if not self.validate(data):
             raise ValueError("Improper text data")
+
         if isinstance(data, list):
             for item in data:
                 self._store(item)
@@ -69,6 +75,7 @@ class TextProcessor(DataProcessor):
 class LogProcessor(DataProcessor):
     def validate(self, data: typing.Any) -> bool:
         if isinstance(data, dict):
+            # Casting to avoid MyPy narrowing issues with 'Any'
             d_data: dict[typing.Any, typing.Any] = data
             return all(
                 isinstance(k, str) and isinstance(v, str)
@@ -87,7 +94,9 @@ class LogProcessor(DataProcessor):
             return True
         return False
 
-    def ingest(self, data: dict[str, str] | list[dict[str, str]]) -> None:
+    def ingest(
+        self, data: dict[str, str] | list[dict[str, str]]
+    ) -> None:  # type: ignore[override]
         if not self.validate(data):
             raise ValueError("Improper log data")
 
@@ -103,80 +112,49 @@ class LogProcessor(DataProcessor):
             self._store(format_log(data))
 
 
-class DataStream:
-    def __init__(self) -> None:
-        self._processors: list[DataProcessor] = []
-
-    def register_processor(self, proc: DataProcessor) -> None:
-        self._processors.append(proc)
-
-    def process_stream(self, stream: list[typing.Any]) -> None:
-        for item in stream:
-            processed = False
-            for p in self._processors:
-                if p.validate(item):
-                    p.ingest(item)
-                    processed = True
-                    break
-            if not processed:
-                print(f"DataStream error - Can't process element in "
-                      f"stream: {item}")
-
-    def print_processors_stats(self) -> None:
-        print("== DataStream statistics ==")
-        if not self._processors:
-            print("No processor found, no data")
-            return
-        for p in self._processors:
-            name = p.__class__.__name__.replace("Processor", " Processor")
-            total = p._rank
-            remaining = len(p._storage)
-            print(f"{name}: total {total} items processed, "
-                  f"remaining {remaining} on processor")
-
-
 if __name__ == "__main__":
-    print("=== Code Nexus - Data Stream ===")
-    print("Initialize Data Stream...")
-    ds = DataStream()
-    ds.print_processors_stats()
+    print("=== Code Nexus - Data Processor ===")
 
-    print("Registering Numeric Processor")
-    num_p = NumericProcessor()
-    ds.register_processor(num_p)
+    print("\nTesting Numeric Processor...")
+    num_proc = NumericProcessor()
+    print(f"Trying to validate input '42': {num_proc.validate('42')}")
+    print(f"Trying to validate input 'Hello': {num_proc.validate('Hello')}")
 
-    batch: list[typing.Any] = [
-        'Hello world',
-        [3.14, -1, 2.71],
-        [{'log_level': 'WARNING',
-          'log_message': 'Telnet access! Use ssh instead'},
-         {'log_level': 'INFO',
-          'log_message': 'User wil is connected'}],
-        42,
-        ['Hi', 'five']
-    ]
-    print(f"Send first batch of data on stream: {batch}")
-    ds.process_stream(batch)
+    print("Test invalid ingestion of string 'foo' without prior validation:")
+    try:
+        # Expected mypy warning/error to occur on the next line
+        num_proc.ingest("foo")
+    except Exception as e:
+        print(f"Got exception: {e}")
 
-    ds.print_processors_stats()
-
-    print("Registering other data processors")
-    txt_p = TextProcessor()
-    log_p = LogProcessor()
-    ds.register_processor(txt_p)
-    ds.register_processor(log_p)
-
-    print("Send the same batch again")
-    ds.process_stream(batch)
-    ds.print_processors_stats()
-
-    print("Consume some elements from the data processors: "
-          "Numeric 3, Text 2, Log 1")
+    num_data: list[int | float] = [1, 2, 3, 4, 5]
+    print(f"Processing data: {num_data}")
+    num_proc.ingest(num_data)
+    print("Extracting 3 values...")
     for _ in range(3):
-        num_p.output()
-    for _ in range(2):
-        txt_p.output()
-    for _ in range(1):
-        log_p.output()
+        rank, val = num_proc.output()
+        print(f"Numeric value {rank}: {val}")
 
-    ds.print_processors_stats()
+    print("\nTesting Text Processor...")
+    txt_proc = TextProcessor()
+    print(f"Trying to validate input '42': {txt_proc.validate('42')}")
+    txt_data: list[str] = ['Hello', 'Nexus', 'World']
+    print(f"Processing data: {txt_data}")
+    txt_proc.ingest(txt_data)
+    print("Extracting 1 value...")
+    rank, val = txt_proc.output()
+    print(f"Text value {rank}: {val}")
+
+    print("\nTesting Log Processor...")
+    log_proc = LogProcessor()
+    print(f"Trying to validate input 'Hello': {log_proc.validate('Hello')}")
+    log_data: list[dict[str, str]] = [
+        {'log_level': 'NOTICE', 'log_message': 'Connection to server'},
+        {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}
+    ]
+    print(f"Processing data: {log_data}")
+    log_proc.ingest(log_data)
+    print("Extracting 2 values...")
+    for _ in range(2):
+        rank, val = log_proc.output()
+        print(f"Log entry {rank}: {val}")
